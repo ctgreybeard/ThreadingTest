@@ -3,6 +3,7 @@
 # Note that I am not importing into this namespace so that usage is explicit
 import threading
 import queue
+import readline
 
 class ThreadTest(threading.Thread):
     def __init__(self):
@@ -11,13 +12,21 @@ class ThreadTest(threading.Thread):
     def run(self):
         mainq = get_main_queue()
         running = True
+
+# Assume we run forever. Who would want to stop?
         while running:
             try:
                 job = mainq.get()
             except Exception as e:
                 print("main queue get failed:", e)
+                job = None
+
+#   If we get a null job (or a queue error) then exit which will terminate the thread
+            if job is not None and job.func is not None:
+                job.run()
+            else:
+                print("main queue stopping")
                 running = False
-            job.run()
 
 class Job:
     def __init__(self, func, args=(), kwargs={}):
@@ -66,4 +75,15 @@ if __name__ == "__main__":
 
     main = ThreadTest()
     main.start()
+    try:
+        s = input("Msg? ")
+        while len(s) > 0:
+            dispatch_main(testit, args=(s,))
+            s = input("Msg? ")
+    except Exception as e:
+        print("Oops ... ", e)
+
+# Put the poison pill on the queue
+    dispatch_main(None)
+
     main.join()
