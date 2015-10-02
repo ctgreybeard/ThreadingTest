@@ -100,7 +100,7 @@ setlocal formatoptions=tcqln
 setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\|^[-*+]\\s\\+
 setlocal grepprg=
 setlocal iminsert=0
-setlocal imsearch=2
+setlocal imsearch=0
 setlocal include=
 setlocal includeexpr=
 setlocal indentexpr=
@@ -155,12 +155,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 10 - ((9 * winheight(0) + 24) / 49)
+let s:l = 241 - ((28 * winheight(0) + 24) / 49)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-10
-normal! 069|
+241
+normal! 062|
 tabedit threadtest.py
 set splitbelow splitright
 set nosplitbelow
@@ -209,7 +209,7 @@ setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=0
+setlocal foldlevel=4
 setlocal foldmarker={{{,}}}
 setlocal foldmethod=indent
 setlocal foldminlines=1
@@ -237,7 +237,8 @@ setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=hex
-setlocal nonumber
+set number
+setlocal number
 setlocal numberwidth=4
 setlocal omnifunc=pythoncomplete#Complete
 setlocal path=
@@ -274,45 +275,37 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-8
+10
 normal! zo
-11
+14
 normal! zo
-12
-normal! zo
-16
-normal! zo
-17
-normal! zo
-22
-normal! zo
-24
-normal! zo
-25
+19
 normal! zo
 27
 normal! zo
-30
+27
 normal! zo
-33
-normal! zo
-37
-normal! zo
-40
-normal! zo
-42
-normal! zo
-45
+35
 normal! zo
 47
 normal! zo
-49
+65
 normal! zo
-let s:l = 42 - ((41 * winheight(0) + 24) / 49)
+73
+normal! zo
+86
+normal! zo
+88
+normal! zo
+91
+normal! zo
+93
+normal! zo
+let s:l = 91 - ((48 * winheight(0) + 24) / 49)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-42
+91
 normal! 051|
 tabedit runit
 set splitbelow splitright
@@ -428,13 +421,13 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 3 - ((2 * winheight(0) + 24) / 49)
+let s:l = 1 - ((0 * winheight(0) + 24) / 49)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
-normal! 020|
-tabnext 3
+1
+normal! 07|
+tabnext 1
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

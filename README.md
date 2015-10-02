@@ -192,3 +192,71 @@ Try entering 'ugly' and see what happens ... I'll wait ...
 
 So, we can still mess things up by creating a real Job with a None function, we don't check for that but I'll
 leave those checks as an exercise for the student.
+
+But, you know, I've been asking you all this time to "trust me" that we have something called a Thread
+which supposedly is doing stuff asynchronously but it doesn't look terribly asynchronous to me.
+You type something in, it gets spit back at you.
+Big deal.
+
+Well, let's add a bit of complexity shall we?
+Let's do ...
+
+#### SleepyTime
+
+The system **sleep** function should be familiar or, just from the name, you have to imagine that it stops things
+from running for a while.
+The program will pause at that point and, well, sleep.
+Let's throw some sleeps into the mix, several at a time as a matter of fact, into the main jobs queue while leaving
+the main thread free to prompt us for more input.
+It won't be pretty but it should demonstrate what's happening.
+
+So, the changes are:
+
+First, I've gone through and modified the messages so the first character tries to identify which Thread it comes from.
+The $ messages come from the main queue Job runner.
+The + messages belong to the prompting thread.
+The @ messages could come from either. These are the global functions that provide access to the queues.
+These are used in both threads.
+Which, incidentally, is why they have to be "Thread Safe" because they could be executing the same code from
+multiple threads.
+Things inside need to be carefully coordinated.
+
+Anyway, you can now better see which Thread sent which message.
+
+But the substance of the change begins around line 77 with "def sleepyTime".
+This is a new function to use in a job.
+All it does is call the time.sleep function for the requested number of seconds.
+We'll create a few of these and schedule them all at once.
+
+Scroll down a little farther and you will see there is a new keyword, sleepy, that we can use to schedule five
+sleepyTime jobs of 1 through five seconds.
+We create and schedule them all at once with times starting at one second up to five.
+By my math that should take 15 seconds or so to run.
+Plenty of time to do other things at the same time.
+
+If you're not sure then you'll have to trust me; when one of the sleepyTime Jobs is running the main Jobs queue
+is stopped for the sleepy time.
+If it weren't then you would see all of the sleepyTime messages push out all at once.
+And if you're quick enough you can even enter even more messages into the input while the sleepyTime jobs
+are doing their thing and you will see the results of that only after all the sleepyTime Jobs have finished.
+
+In fact, you can even enter the null line to quit the system while they are sending and you will see that
+the system waits for the last of the queued jobs to complete before exiting.
+
+So, try it.
+Run the system and enter a message or two, it responds normally.
+Now enter the sleepy keyword and watch as it creates and submits the five jobs then continues displaying the
+sleep times.
+You may even see the first one or two sleepyTime messages come out while it's still creating the rest of the five jobs.
+
+Enter sleepy again then continue entering messages (or ugly) while everything else is going on.
+When you review the output you will see all the output is in sequence but the inputs are interspersed.
+The input prompt (+Msg? ) gets kinda lost in all the output simply because the simple terminal model
+doesn't handle simultaneous input and output well.
+It comes out right but looks terrible.
+Not at all what we are used to in a GUI windowed system.
+Maybe we'll work on that later?
+
+So, are you convinced yet?
+Are we really running two separate Threads independently?
+
