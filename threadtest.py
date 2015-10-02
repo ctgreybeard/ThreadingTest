@@ -22,11 +22,13 @@ class ThreadTest(threading.Thread):
                 job = None
 
 #   If we get a null job (or a queue error) then exit which will terminate the thread
-            if job is not None and job.func is not None:
-                job.run()
-            else:
+            if isinstance(job, Job):
+                    job.run()
+            elif job is None:
                 print("main queue stopping")
                 running = False
+            else:
+                print("Got a non-Job ...")
 
 class Job:
     def __init__(self, func, args=(), kwargs={}):
@@ -54,15 +56,15 @@ def get_main_queue() -> queue.Queue:
     print("get_main_queue")
     return get_queue("main")
 
-def dispatch_main(func, args=(), kwargs={}):
+def dispatch_main(qobj):
     print("Dispatch main")
-    dispatch_queue("main", func, args, kwargs)
+    dispatch_queue("main", qobj)
 
-def dispatch_queue(queuename, func, args=(), kwargs={}):
+def dispatch_queue(queuename, qobj):
     print("Dispatch queue:", queuename)
     act_queue = get_queue(queuename)
     try:
-        act_queue.put(Job(func, args, kwargs))
+        act_queue.put(qobj)
     except:
         print("Put to", queuename, "queue failed.")
 
@@ -71,14 +73,17 @@ if __name__ == "__main__":
     def testit(msg):
         print("Testit dispatched:", msg)
 
-    dispatch_main(testit, args=("Your message here ...",))
+    dispatch_main(Job(testit, args=("Your message here ...",)))
 
     main = ThreadTest()
     main.start()
     try:
         s = input("Msg? ")
         while len(s) > 0:
-            dispatch_main(testit, args=(s,))
+            if s != "ugly":
+                dispatch_main(Job(testit, args=(s,)))
+            else:
+                dispatch_main(42)   # NOT a Job!!
             s = input("Msg? ")
     except Exception as e:
         print("Oops ... ", e)

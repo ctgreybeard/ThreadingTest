@@ -172,3 +172,23 @@ But that also means we can use the same dispatch_queue routine to post other typ
 objects rather than Job objects.
 That might prove useful later on in the project.
 Let's do that first ...
+
+#### GeneralQueue
+
+OK, take a look at the diff from here (git diff WeCanStop -- threadtest.py)
+
+You can see the simple changes.
+The queueing functions now take any object at all and out it onto the queue.
+The main thread loop first checks that it has a Job object and runs it if so.
+This is the normal course.
+Then it checks for the Poison Pill (None) and, failing that, shows an error and continues.
+This is important because now that the queue can hold any object the object on **THIS** queue MUST be a Job
+for us to execute.
+How we handle an incorrect type of object depends on the design of our system; here we simply give an
+error and ignore it.
+We test this by checking for a special word (ugly) in the input and put something NOT a Job on the queue
+when we encounter it.
+Try entering 'ugly' and see what happens ... I'll wait ...
+
+So, we can still mess things up by creating a real Job with a None function, we don't check for that but I'll
+leave those checks as an exercise for the student.
